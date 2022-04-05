@@ -4,7 +4,6 @@ import styles from './styles.module.css'
 export const YouTube = (props) => {
   const { videoId, width, height, privacy } = props
   const [showVideo, setShowVideo] = useState(false)
-  console.log('https://www.youtube.com/watch?v=' + videoId)
   return (
     <Fragment>
       {showVideo ? (

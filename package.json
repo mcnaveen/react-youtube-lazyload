@@ -1,6 +1,6 @@
 {
   "name": "react-youtube-lazyload",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A blazing fast YouTube embed component that supports lazy loading",
   "author": "mcnaveen",
   "license": "MIT",
