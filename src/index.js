@@ -1,13 +1,29 @@
-import React, { useState, Fragment, useEffect } from 'react'
+import React, { useState, Fragment, useEffect, useRef } from 'react'
 import styles from './styles.module.css'
 
 export const YouTube = (props) => {
   const { videoId, width, height, privacy, onPlayChange, playing, className } =
     props
   const [showVideo, setShowVideo] = useState(false)
+  const iframeRef = useRef(null)
 
   useEffect(() => {
     setShowVideo(playing)
+    if (playing) {
+      if (iframeRef.current) {
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}',
+          '*'
+        )
+      }
+    } else {
+      if (iframeRef.current) {
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"pauseVideo","args":""}',
+          '*'
+        )
+      }
+    }
   }, [playing])
 
   const handlePlayButtonClick = () => {
@@ -21,6 +37,7 @@ export const YouTube = (props) => {
     <Fragment>
       {showVideo ? (
         <iframe
+          ref={iframeRef}
           className={className}
           width={width || '560px'}
           height={height || '315px'}
