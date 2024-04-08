@@ -26,6 +26,22 @@ export const YouTube = (props) => {
     }
   }, [playing])
 
+  useEffect(() => {
+    const handleIframeMessages = (event) => {
+      if (event.data === 'pauseVideo' && playing) {
+        if (onPlayChange) {
+          onPlayChange(false)
+        }
+      }
+    }
+
+    window.addEventListener('message', handleIframeMessages)
+
+    return () => {
+      window.removeEventListener('message', handleIframeMessages)
+    }
+  }, [onPlayChange, playing])
+
   const handlePlayButtonClick = () => {
     setShowVideo(true)
     if (onPlayChange) {
