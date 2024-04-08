@@ -26,26 +26,19 @@ export const YouTube = (props) => {
     }
   }, [playing])
 
-  useEffect(() => {
-    const handleIframeMessages = (event) => {
-      if (event.data === 'pauseVideo' && playing) {
-        if (onPlayChange) {
-          onPlayChange(false)
-        }
-      }
-    }
-
-    window.addEventListener('message', handleIframeMessages)
-
-    return () => {
-      window.removeEventListener('message', handleIframeMessages)
-    }
-  }, [onPlayChange, playing])
-
   const handlePlayButtonClick = () => {
     setShowVideo(true)
     if (onPlayChange) {
       onPlayChange(true)
+    }
+  }
+
+  const handleStateChange = (event) => {
+    // Event data of 0 indicates the video is ended, 1 indicates the video is playing, and 2 indicates the video is paused
+    if (event.data === 2) {
+      if (onPlayChange) {
+        onPlayChange(false)
+      }
     }
   }
 
@@ -62,6 +55,13 @@ export const YouTube = (props) => {
           }.com/embed/${videoId}?autoplay=1&showinfo=0&rel=0`}
           allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
           allowFullScreen
+          // Register the onStateChange event listener
+          onLoad={() => {
+            iframeRef.current.contentWindow.addEventListener(
+              'onStateChange',
+              handleStateChange
+            )
+          }}
         />
       ) : (
         <div
